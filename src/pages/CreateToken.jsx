@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RpcProvider, Account, Contract, json, stark, uint256, shortString, CallData } from 'starknet';
 import erc20 from '../abis/erc20';
+
 const TokenForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -26,13 +27,13 @@ const TokenForm = ({ onSubmit }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold text-center text-gray-800 mb-4">Token Form</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300">
+      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Your Token</h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700" htmlFor="name">
-              Name
+              Token Name
             </label>
             <input
               type="text"
@@ -40,13 +41,14 @@ const TokenForm = ({ onSubmit }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="e.g., MyToken"
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700" htmlFor="symbol">
-              Symbol
+              Token Symbol
             </label>
             <input
               type="text"
@@ -54,13 +56,14 @@ const TokenForm = ({ onSubmit }) => {
               name="symbol"
               value={formData.symbol}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="e.g., MTK"
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700" htmlFor="supply">
-              Supply
+              Initial Supply
             </label>
             <input
               type="number"
@@ -68,15 +71,16 @@ const TokenForm = ({ onSubmit }) => {
               name="supply"
               value={formData.supply}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="e.g., 1000000"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full px-4 py-2 text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring focus:ring-blue-300 transition-transform transform hover:scale-105"
           >
-            Submit
+            Deploy Token
           </button>
         </form>
       </div>
@@ -87,37 +91,29 @@ const TokenForm = ({ onSubmit }) => {
 const App = () => {
   const handleFormSubmit = async (data) => {
     console.log('Submitted Data:', data);
-    // connect provider
     const provider = new RpcProvider({ baseUrl: 'SN_SEPOLIA' });
-    // connect your account. To adapt to your own account:
     const privateKey0 = '';
     const account0Address = '0x01AeDF7F51F88733B58Bfa8ea2411cA0696c95f8defBA3cA1316501a0b1d37F9';
 
     const account0 = new Account(provider, account0Address, privateKey0);
 
-    // Deploy Test contract in devnet
-    // ClassHash of the already declared contract
-    const testClassHash = '0x00e107d2fe3eb8da26235c9bfcc5c63f40c2c939386f759b4778b1825e66ce8b';
+    const testClassHash = '0x02d2cc667f2d1db3bb2748e77d577a12cb6fd947954591f1f9b803fe27659a5b';
 
-
-      const contractCallData = new CallData(erc20);
+    const contractCallData = new CallData(erc20);
     const contractConstructor = contractCallData.compile('constructor', {
-        name: data.name,
-        symbol: data.symbol, // for Cairo v2.4.0 onwards
-        supply: data.supply,
+      name: data.name,
+      symbol: data.symbol,
+      supply: data.supply,
+      owner: account0Address
     });
 
-    const deployResponse = await account0.deployContract({ classHash: testClassHash, constructorCalldata:contractConstructor });
-    console.log(`TxHash: ${deployResponse.transaction_hash}`)
+    const deployResponse = await account0.deployContract({ classHash: testClassHash, constructorCalldata: contractConstructor });
+    console.log(`TxHash: ${deployResponse.transaction_hash}`);
     await provider.waitForTransaction(deployResponse.transaction_hash);
 
-    // read abi of Test contract
     const { abi: testAbi } = await provider.getClassByHash(testClassHash);
-    if (testAbi === undefined) {
-    throw new Error('no abi.');
-    }
+    if (!testAbi) throw new Error('no abi.');
 
-    // Connect the new contract instance:
     const myTestContract = new Contract(testAbi, deployResponse.contract_address, provider);
     console.log('✅ Test Contract connected at =', myTestContract.address);
   };
