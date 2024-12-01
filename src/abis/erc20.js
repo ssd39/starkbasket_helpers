@@ -1,4 +1,4 @@
-[
+export default [
   {
     "type": "impl",
     "name": "ERC20MixinImpl",
