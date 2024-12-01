@@ -5,6 +5,7 @@ import App from './App';
 import CreateToken from './pages/CreateToken'
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router";
+import CreateBasketFactory from './pages/CreateBasketFactory'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/create-token" element={<CreateToken />} />
+        <Route path="/create-basket-factory" element={<CreateBasketFactory />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
