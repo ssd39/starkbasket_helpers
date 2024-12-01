@@ -207,7 +207,7 @@ const App = () => {
     const account0Address =
       "0x01AeDF7F51F88733B58Bfa8ea2411cA0696c95f8defBA3cA1316501a0b1d37F9";
     const basket_factory_address =
-      "0x10e37fe4fbd7c9a4f92b2f066120016bf02b13f3eb1dc682565dcc5345c2941";
+      "0x23d07f240fe7676fe15163d28ba280f8bd88888e92ae6c562946999010b54f3";
 
     const account0 = new Account(provider, account0Address, privateKey0);
 

@@ -62,7 +62,7 @@ const App = () => {
 
     const account0 = new Account(provider, account0Address, privateKey0);
 
-    const testClassHash = "0x01051b82c755e03a4f50da3f60cff3d40d5c1fa775ed475fba84f2c2afcbd109";
+    const testClassHash = "0x05e7ba968851f07d7f8d2c492d767a08fe3be2f7f3408ca3821ff633a61d75f9";
 
     const contractCallData = new CallData(basketFactory);
     const contractConstructor = contractCallData.compile("constructor", {
