@@ -4,8 +4,9 @@ import { Link } from 'react-router';
 const App = () => {
   const routes = [
     { path: "/", label: "Home" },
-    { path: "/create-token", label: "Create Token" },
-    { path: "/create-basket-factory", label: "Create Basket Factory" },
+    { path: "/create-token", label: "Deploy Token" },
+    { path: "/create-basket-factory", label: "Deploy Basket Factory" },
+    { path: "/create-basket", label: "Create Basket" },
   ];
 
   return (

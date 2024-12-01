@@ -92,7 +92,7 @@ const App = () => {
   const handleFormSubmit = async (data) => {
     console.log('Submitted Data:', data);
     const provider = new RpcProvider({ baseUrl: 'SN_SEPOLIA' });
-    const privateKey0 = '';
+    const privateKey0 = 'MY_PK';
     const account0Address = '0x01AeDF7F51F88733B58Bfa8ea2411cA0696c95f8defBA3cA1316501a0b1d37F9';
 
     const account0 = new Account(provider, account0Address, privateKey0);
